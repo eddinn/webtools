@@ -1,0 +1,12 @@
+AuthName "Vefkerfi"
+AuthType Basic
+AuthUserFile /var/www/passwd/.passwd
+ErrorDocument 401 "&THORN;&uacute; hefur ekki a&eth;gang a&eth; &thorn;essu sv&aelig;&eth;i."
+ErrorDocument 403 "&THORN;&uacute; hefur ekki a&eth;gang a&eth; &thorn;essu sv&aelig;&eth;i."
+Satisfy any
+<Limit GET POST>
+order deny,allow
+deny from all
+allow from .eddinn.net 192.168.
+require user edvin
+</Limit>

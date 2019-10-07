@@ -1,0 +1,302 @@
+<script type="text/javascript">
+	function updateFieldTTL(selectBox) {
+                if (selectBox.selectedIndex == 1) {
+                        document.getElementById('domainContTTL').style.display = "block";
+                } else {
+                        document.getElementById('domainContTTL').style.display = "none";
+	        }
+		if (selectBox.selectedIndex == 2) {
+                        document.getElementById('hostContTTL').style.display = "block";
+                } else {
+                        document.getElementById('hostContTTL').style.display = "none";
+                }
+	}
+
+	function updateField(selectBox) {
+		document.getElementById("code").style.display = "none";
+		for(var i = 1; i < selectBox.length ; i++) {
+			if ( i == selectBox.selectedIndex)
+				document.getElementById("container"+i).style.display = "block";
+			else
+				document.getElementById("container"+i).style.display = "none";
+		}
+	}
+
+	function getOption(hiddenElement) {
+		document.getElementById(hiddenElement).value = document.getElementById('options').value;
+	}
+	
+	function getValue() { 
+		document.getElementById("addDomainForm").mxForm.value = document.getElementById("addDomainForm").mx.value;
+	}
+
+</script>
+<p id="selectAction">
+Select action:
+</p>
+<select id="options" name="options" onchange="updateField(this);">
+	<option value="">DNS Actions</option>
+	<option value="addDomain">Add Domain</option>
+	<option value="deleteDomain">Delete Domain</option>
+	<option value="addHost">Add host</option>
+	<option value="addCname">Add CNAME</option>
+	<option value="deleteHost">Delete host</option>
+	<option value="changeIP">Change host IP</option>
+	<option value="changeTTL">Change TTL</option>
+	<option value="dnsLookup">DNS Lookup</option>
+	<option value="whois">Whois</option>
+</select>
+<br />
+<br />
+<div id="container1">
+	<div id="notes">
+        	<h4>Adding a domain</h4>
+        	<p>Enter a fully qualified TLD name.<br />For example; <strong>example.com</strong></p>
+	        <p>It is important that you provide a valid, working IP address for your domain.</p>
+       	 	<p>Either choose the default MX IP address or provide a valid, working IP address of your own.</p>
+	</div>
+        <form id="addDomainForm" action="?action=dns&addDomain=result" method="post">
+        	<p>
+                <?php
+			$version = "2.4";
+			echo"<strong>DNS add domain - version $version</strong><br />";
+		?>
+                <input type="text" name="domain" value="<?php print(((isset($_POST["domain"]) ? $_POST["domain"] : ""))); ?>" size="30" />&nbsp; Domain<br />
+                <input type="text" name="ip" value="<?php print(((isset($_POST["ip"]) ? $_POST["ip"] : ""))); ?>" size="30" />&nbsp; IP<br />
+                <select name="mx" onchange="javascript:getValue()">
+	       	        <option value="">MX Options</option>
+        	        <option value="82.221.35.186">eddinn.net</option>
+	                <option value="">Custom MX</option>
+	        </select>
+                <br />
+                <input type="text" name="mxForm" value="<?php print(((isset($_POST["mxForm"]) ? $_POST["mxForm"] : ""))); ?>" size="30" />&nbsp; MX<br /><br />
+		<input id="addDomainOption" type="hidden" name="options" />
+                <input type="submit" name="submit" value="Submit" onclick="getOption('addDomainOption');" />
+                </p>
+	</form>
+</div>
+<div id="container2">
+	<div id="notes">
+                <h4>Deleting a domain</h4>
+                <p>Enter the TLD name you wish to delete from the server.<br />For example; <strong>example.com</strong></p>
+        </div>
+        <form id="deleteDomainForm" action="?action=dns&deleteDomain=result" method="post">
+                <p>
+                <?php
+			$version = "1.6";
+			echo"<strong>DNS delete domain - version $version</strong><br />";
+		?>
+                <input type="text" name="domain" value="<?php print(((isset($_POST["domain"]) ? $_POST["domain"] : ""))); ?>" size="30" />&nbsp; Domain<br /><br />
+                <input type="hidden" name="options" id="deleteDomainOption" />
+                <input type="submit" name="submit" value="Submit" onclick="getOption('deleteDomainOption');" />
+                </p>
+        </form>
+</div>
+<div id="container3">
+        <div id="notes">
+                <h4>Adding a hostname</h4>
+                <p>Enter a hostname of your choice.<br />For example; <strong>myhostname</strong></p>
+                <p>Enter the TLD name you wish to add the hostname to.<br />For example; <strong>example.com</strong></p>
+                <p>It is important that you provide a valid, working IP address for your hostname.</p>
+        </div>
+	<form id="addHostForm" action="?action=dns&addHost=result" method="post">
+        	<p>
+                <?php
+			$version = "2.4";
+			echo"<strong>DNS add host - version $version</strong><br />";
+		?>
+                <input type="text" name="host" value="<?php print(((isset($_POST["host"]) ? $_POST["host"] : ""))); ?>" size="30" />&nbsp; Host<br />
+                <input type="text" name="domain" value="<?php print(((isset($_POST["domain"]) ? $_POST["domain"] : ""))); ?>" size="30" />&nbsp; Domain<br />
+                <input type="text" name="ip" value="<?php print(((isset($_POST["ip"]) ? $_POST["ip"] : ""))); ?>" size="30" />&nbsp; IP<br /><br />
+		<input type="hidden" name="options" id="addHostOption" />
+                <input type="submit" name="submit" value="Submit" onclick="getOption('addHostOption');" />
+                </p>
+	</form>
+</div>
+<div id="container4">
+        <div id="notes">
+                <h4>Adding a CNAME</h4>
+                <p>Enter a hostname of your choice.<br />For example; <strong>myhostname2</strong></p>
+                <p>Enter the TLD name you wish to add the hostname to.<br />For example; <strong>example.com</strong></p>
+                <p>Enter a known, valid hostname to CNAME (alias) to.<br />For example; <strong>myhostname.example.com</strong></p>
+        </div>
+        <form id="addCnameForm" action="?action=dns&addCname=result" method="post">
+                <p>
+                <?php
+			$version = "2.6";
+			echo"<strong>DNS add CNAME - version $version</strong><br />";
+		?>
+                <input type="text" name="host" value="<?php print(((isset($_POST["host"]) ? $_POST["host"] : ""))); ?>" size="30" />&nbsp; Host<br />
+                <input type="text" name="domain" value="<?php print(((isset($_POST['domain']) ? $_POST['domain'] : ""))); ?>" size="30" />&nbsp; Domain<br />
+                <input type="text" name="cnamehost" value="<?php print(((isset($_POST["cnamehost"]) ? $_POST["cnamehost"] : ""))); ?>" size="30" />&nbsp; CNAME Host<br /><br />
+                <input type="hidden" name="options" id="addCnameOption" />
+		<input type="submit" name="submit" value="Submit" onclick="getOption('addCnameOption');" />
+                </p>
+        </form>
+</div>
+<div id="container5">
+        <div id="notes">
+                <h4>Deleting a hostname</h4>
+                <p>Enter an existing hostname which you wish to delete.<br />For example; <strong>myhostname</strong></p>
+                <p>Enter the TLD name you wish to delete the hostname from.<br />For example; <strong>example.com</strong></p>
+        </div>
+        <form id="deleteHostForm" action="?action=dns&deleteHost=result" method="post">
+                <p>
+                <?php
+			$version = "2.6";
+			echo"<strong>DNS delete host - version $version</strong><br />";
+		?>
+                <input type="text" name="host" value="<?php print(((isset($_POST["host"]) ? $_POST["host"] : ""))); ?>" size="30" />&nbsp; Host<br />
+                <input type="text" name="domain" value="<?php print(((isset($_POST["domain"]) ? $_POST["domain"] : ""))); ?>" size="30" />&nbsp; Domain<br /><br />
+                <input type="hidden" name="options" id="deleteHostOption" />
+                <input type="submit" name="submit" value="Submit" onclick="getOption('deleteHostOption');" />
+                </p>
+        </form>
+</div>
+<div id="container6">
+        <div id="notes">
+                <h4>Changing the IP</h4>
+		<p>Enter the hostname you wish to change the IP address for.<br />For example; <strong>myhostname</strong></p>
+		<p>It is important that you provide a valid, working IP address for your hostname.</p>
+		<p>Enter the associated TLD name for the hostname.<br />For example; <strong>example.com</strong></p>
+		<p><strong>Optional:</strong><br />Enter the TTL in seconds.<br />(Minimal 300 sec = 5 min)<br />For example; <strong>2400</strong></p>
+        </div>
+        <form id="changeIPForm" action="?action=dns&changeIP=result" method="post">
+        <p>
+        <?php
+                $version = "0.1";
+                echo"<strong>DNS change host IP - version $version</strong><br />";
+        ?>
+        <input type="text" name="host" value="<?php print(((isset($_POST["host"]) ? $_POST["host"] : ""))); ?>" size="30" />&nbsp; Host<br />
+	<input type="text" name="ip" value="<?php print(((isset($_POST["ip"]) ? $_POST["ip"] : ""))); ?>" size="30" />&nbsp; IP<br />
+        <input type="text" name="domain" value="<?php print(((isset($_POST["domain"]) ? $_POST["domain"] : ""))); ?>" size="30" />&nbsp; Domain<br />
+        <input type="text" name="ttl" value="<?php print(((isset($_POST["ttl"]) ? $_POST["ttl"] : ""))); ?>" size="6" />&nbsp; TTL&nbsp;(Optional)<br /><br />
+        <input type="hidden" name="options" id="changeIPOption" />
+        <input type="submit" name="submit" value="Submit" onclick="getOption('changeIPOption');" />
+        </p>
+        </form>
+</div>
+<div id="container7">
+        <div id="notes">
+                <h4>Changing the TTL</h4>
+                <p>Select either actions for changing the TTL for a whole TLD or just a single hostname from the selectbox on the left.</p>
+		<p><strong>Domain TTL</strong><br />Enter the TLD name you wish to change the TTL for.<br />For example; <strong>example.com</strong></p>
+		<p>Enter the TTL in seconds.<br />(Minimal 300 sec = 5 min)<br />For example; <strong>2400</strong></p>
+		<p><strong>Hostname TTL</strong><br />Enter the hostname you wish to change the TTL for.<br />For example; <strong>myhostname</strong></p>
+		<p>Enter the associated TLD name for the hostname.<br />For example; <strong>example.com</strong></p>
+		<p>Enter the TTL in seconds.<br />(Minimal 300 sec = 5 min)<br />For example; <strong>2400</strong></p>
+        </div>
+	<form id="changeTTLForm" action="?action=dns&changeTTL=result" method="post">
+	<p>
+        <?php
+		$version = "3.1";
+		echo"<strong>DNS change TTL - version $version</strong><br />";
+	?>
+        <select name="selectDomainHost" onchange="updateFieldTTL(this);">
+                <option value="">TTL actions</option>
+                <option value="domainTTL">Domain TTL</option>
+                <option value="hostTTL">Host TTL</option>
+        </select>
+	<br />
+	<br />
+	<div id="domainContTTL">
+	                <input type="text" name="domain1" value="<?php print(((isset($_POST["domain1"]) ? $_POST["domain1"] : ""))); ?>" size="30" />&nbsp; Domain<br />
+			<input type="text" name="ttl1" value="<?php print(((isset($_POST["ttl1"]) ? $_POST["ttl1"] : ""))); ?>" size="6" />&nbsp; TTL<br /><br />
+	</div>
+	<div id="hostContTTL">
+                        <input type="text" name="host" value="<?php print(((isset($_POST["host"]) ? $_POST["host"] : ""))); ?>" size="30" />&nbsp; Host<br />
+                        <input type="text" name="domain2" value="<?php print(((isset($_POST["domain2"]) ? $_POST["domain2"] : ""))); ?>" size="30" />&nbsp; Domain<br />
+                        <input type="text" name="ttl2" value="<?php print(((isset($_POST["ttl2"]) ? $_POST["ttl2"] : ""))); ?>" size="6" />&nbsp; TTL<br /><br />
+        </div>
+	<input type="hidden" name="options" id="changeTTLOption" />
+	<input type="submit" name="submit" value="Submit" onclick="getOption('changeTTLOption');" />
+	</p>
+	</form>
+</div>
+<div id="container8">
+        <div id="notes">
+                <h4>DNS lookup</h4>
+                <p>Enter a TLD name, hostname or an valid IP address for a reverse lookup.<br />For example;<br /><strong>&nbsp;&nbsp;example.com<br />&nbsp;&nbsp;myhostname.example.com<br />&nbsp;&nbsp;66.249.93.104</strong></p>
+                <p>Select a lookup option from the selectbox on the left.<br /><strong>Note:</strong> the <strong>-x</strong> option is only for reverse IP lookups</p>
+        </div>
+        <form id="dnsLookupForm" action="?action=dns&dnsLookup=result" method="post">
+                <p>
+                <?php
+			$version = "1.2";
+			echo"<strong>DNS lookup - version $version</strong><br />";
+		?>
+                <input type="text" name="lookup" value="<?php print(((isset($_POST["lookup"]) ? $_POST["lookup"] : ""))); ?>" size="30" />&nbsp; Host/IP<br />
+                <select name="digType">
+                        <option value="">Dig options</option>
+                        <option value="any">ANY</option>
+                        <option value="axfr">AXFR</option>
+			<option value="hinfo">HINFO</option>
+			<option value="mx">MX</option>
+			<option value="ns">NS</option>
+			<option value="ptr">PTR</option>
+			<option value="soa">SOA</option>
+			<option value="txt">TXT</option>
+			<option value="-x">-x ARPA</option>
+                </select>
+                <br /><br />
+                <input type="hidden" name="options" id="dnsLookupOption" />
+                <input type="submit" name="submit" value="Submit" onclick="getOption('dnsLookupOption');" />
+                </p>
+        </form>
+</div>
+<div id="container9">
+        <div id="notes">
+                <h4>WHOIS information</h4>
+                <p>Enter a TLD name, an valid IP address or a valid IP network.<br />For example;<br />&nbsp;&nbsp;<strong>example.com<br />&nbsp;&nbsp;66.249.93.104
+<br />&nbsp;&nbsp;66.249.0.0</strong></p>
+        </div>
+        <form id="whoisForm" action="?action=dns&whois=result" method="post">
+                <p>
+                <?php
+			$version = "1.2";
+			echo"<strong>DNS whois - version $version</strong><br />";
+		?>
+                <input type="text" name="whois" value="<?php print(((isset($_POST["whois"]) ? $_POST["whois"] : ""))); ?>" size="30" />&nbsp; Domain/IP<br /><br />
+                <input type="hidden" name="options" id="whoisOption" />
+                <input type="submit" name="submit" value="Submit" onclick="getOption('whoisOption');" />
+                </p>
+        </form>
+</div>
+<div id="code">
+<?php if (isset($_REQUEST["submit"])) {
+/* print("<pre>");
+print_r($_REQUEST);
+print("</pre>"); */
+	if (isset($_REQUEST ['options'])) {
+		switch ($_REQUEST['options']) {
+			case 'addDomain':
+				include("addDomain.php");
+				break;
+			case 'deleteDomain':
+				include("deleteDomain.php");
+				break;
+			case 'addHost':
+				include("addHost.php");
+				break;
+			case 'addCname':
+				include("addCname.php");
+				break;
+                	case 'deleteHost':
+				include("deleteHost.php");
+				break;
+			case 'changeIP':
+				include("changeIP.php");
+				break;
+			case 'changeTTL':
+				include("changeTTL.php");
+				break;
+			case 'dnsLookup':
+				include("dnsLookup.php");
+				break;
+			case 'whois':
+				include("whois.php");
+				break;
+		}
+	}
+} ?>
+</div>
